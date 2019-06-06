@@ -21,8 +21,9 @@ MainComponent::MainComponent()
     
     gif = new AnimatedGIFComponent();
     gif->setImage(animation);
-    addAndMakeVisible(gif);
     gif->start();
+    addAndMakeVisible(gif);
+    
     
     setSize (600, 400);
 }
