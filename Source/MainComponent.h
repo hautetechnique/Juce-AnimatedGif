@@ -1,29 +1,24 @@
-/*
-  ==============================================================================
-
-    This file was auto-generated!
-
-  ==============================================================================
-*/
+//
+//  MainComponent.cpp
+//  AnimatedGif
+//
+//  Created by Sander ter Braak on 04/06/2019.
+//
+//
 
 #pragma once
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "AnimatedGIFImage.hpp"
 #include "AnimatedGIFComponent.hpp"
-//==============================================================================
-/*
-    This component lives inside our window, and this is where you should put all
-    your controls and content.
-*/
+
 class MainComponent   : public Component
 {
 public:
-    //==============================================================================
+
     MainComponent();
     ~MainComponent();
 
- //==============================================================================
     void paint (Graphics&) override;
     void resized() override;
 

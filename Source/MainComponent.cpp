@@ -1,19 +1,19 @@
-/*
-  ==============================================================================
-
-    This file was auto-generated!
-
-  ==============================================================================
-*/
+//
+//  MainComponent.hpp
+//  AnimatedGif
+//
+//  Created by Sander ter Braak on 04/06/2019.
+//
+//
 
 #include "MainComponent.h"
 
-//==============================================================================
+
 MainComponent::MainComponent()
 {
     
     AnimatedGIFImageFormat a;
-    File f("/Users/sanderterbraak/Desktop/test.gif");
+    File f("~/Desktop/test.gif");
     
     
     AnimatedGIFImage animation;
@@ -31,19 +31,11 @@ MainComponent::~MainComponent()
 {
 }
 
-
-
-//==============================================================================
 void MainComponent::paint (Graphics& g)
 {
-    
-   
-    
-   
 }
 
 void MainComponent::resized()
 {
-    
     gif->setBounds(0, 0, gif->getGIFWidth(), gif->getGIFHeight());
 }
