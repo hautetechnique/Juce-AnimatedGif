@@ -31,25 +31,4 @@ private:
     Array<int> frameTimes;
 };
 
-class AnimatedGIFImageFormat  : public ImageFileFormat
-{
-public:
-    //==============================================================================
-    AnimatedGIFImageFormat();
-    ~AnimatedGIFImageFormat();
-    
-    //==============================================================================
-    String getFormatName() override;
-    bool usesFileExtension (const File&) override;
-    bool canUnderstand (InputStream&) override;
-    Image decodeImage (InputStream&) override;
-    
-    AnimatedGIFImage decodeAnimation (InputStream&);
-    
-    bool writeImageToStream (const Image&, OutputStream&) override;
-};
-
-
-
-
 #endif /* AnimatedGIFImage_hpp */

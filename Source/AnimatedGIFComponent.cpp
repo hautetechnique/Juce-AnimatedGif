@@ -19,9 +19,39 @@ AnimatedGIFComponent::~AnimatedGIFComponent()
 
 }
 
+int AnimatedGIFComponent::getFrameRate()
+{
+    return framerate;
+}
+
+void AnimatedGIFComponent::useDefaultFramerate()
+{
+    
+    framerate = 0;
+    if(img.getNumFrames() > 0)
+        framerate = img.getFrameDuration(0);
+    
+    if(framerate == 0) framerate = 100;
+}
+
+void AnimatedGIFComponent::setFrameRate(int ms)
+{
+    if(framerate != ms)
+    {
+        framerate = ms;
+        if(isTimerRunning())
+        {
+            stopTimer();
+            startTimer(framerate);
+        }
+    }
+}
+
 void AnimatedGIFComponent::start()
 {
-    startTimer(100); /// Needs implementation
+    if(framerate < 0) useDefaultFramerate();
+    
+    startTimer(framerate);
 }
 
 void AnimatedGIFComponent::stop()
@@ -54,6 +84,7 @@ void AnimatedGIFComponent::setImage(const AnimatedGIFImage & img)
 {
     this->img = img;
     currentFrame = 0;
+    framerate = -1;
     repaint();
 }
 

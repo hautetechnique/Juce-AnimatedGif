@@ -8,51 +8,8 @@
 
 #include "AnimatedGIFImage.hpp"
 
-AnimatedGIFImage AnimatedGIFImage::getFromFile (const File& file)
-{
-    if(file.existsAsFile())
-    {
-        ScopedPointer<InputStream> is = file.createInputStream();
-        return getFromStream(*is);
-    }
-    return AnimatedGIFImage();
-}
 
-AnimatedGIFImage AnimatedGIFImage::getFromStream (InputStream& stream)
-{
-    ScopedPointer<AnimatedGIFImageFormat> loader = new AnimatedGIFImageFormat();
-    if(loader->canUnderstand(stream))
-    {
-        stream.setPosition(0);
-        return loader->decodeAnimation(stream);
-    }
-    return AnimatedGIFImage();
-}
-
-void AnimatedGIFImage::setFrameDuration(int frame, int ms)
-{
-    frameTimes.set(frame, ms);
-}
-
-int AnimatedGIFImage::getFrameDuration(int frame)
-{
-    if(frameTimes.size() >= frame)
-        return frameTimes.getReference(frame);
-    
-    return -1;
-}
-
-bool AnimatedGIFImage::isAnimated()
-{
-    return size() > 1;
-}
-
-int AnimatedGIFImage::getNumFrames()
-{
-    return size();
-}
-
-// THIS CODE BELOW IS JULES HIS GIFLOADER, SLIGHTLY MODIFIED
+// THE FIRST PART OF THEW CODE BELOW IS JULES GIFLOADER, SLIGHTLY MODIFIED
 //==============================================================================
 class AnimatedGIFLoader
 {
@@ -117,7 +74,7 @@ public:
                 
                 readImage ((buf[8] & 0x40) != 0, transparent);
             }
-           
+            
             //break;
         }
     }
@@ -201,8 +158,10 @@ private:
             if (n < 0)
                 return 1;
             
-            /// this is the frame time, needs implementation!
-            frameDuration = b[1] + b[2];
+            unsigned char temp[2] = {b[1] , b[2]};
+            
+            short duration = (short) ByteOrder::littleEndianShort (temp);
+            frameDuration = duration * 10;
             
             if ((b[0] & 1) != 0)
                 transparent = b[3];
@@ -443,37 +402,43 @@ private:
     JUCE_DECLARE_NON_COPYABLE (AnimatedGIFLoader)
 };
 
-//==============================================================================
-AnimatedGIFImageFormat::AnimatedGIFImageFormat() {}
-AnimatedGIFImageFormat::~AnimatedGIFImageFormat() {}
-
-String AnimatedGIFImageFormat::getFormatName()                  { return "GIF"; }
-bool AnimatedGIFImageFormat::usesFileExtension (const File& f)  { return f.hasFileExtension ("gif"); }
-
-bool AnimatedGIFImageFormat::canUnderstand (InputStream& in)
+AnimatedGIFImage AnimatedGIFImage::getFromFile (const File& file)
 {
-    char header [4];
-    
-    return (in.read (header, sizeof (header)) == sizeof (header))
-    && header[0] == 'G'
-    && header[1] == 'I'
-    && header[2] == 'F';
+    if(file.existsAsFile())
+    {
+        ScopedPointer<InputStream> is = file.createInputStream();
+        return getFromStream(*is);
+    }
+    return AnimatedGIFImage();
 }
 
-Image AnimatedGIFImageFormat::decodeImage (InputStream& in)
+AnimatedGIFImage AnimatedGIFImage::getFromStream (InputStream& stream)
 {
-    const ScopedPointer<AnimatedGIFLoader> loader (new AnimatedGIFLoader (in));
-    return loader->image.getFirst();
-}
-
-AnimatedGIFImage AnimatedGIFImageFormat::decodeAnimation (InputStream& in)
-{
-    const ScopedPointer<AnimatedGIFLoader> loader (new AnimatedGIFLoader (in));
+    const ScopedPointer<AnimatedGIFLoader> loader (new AnimatedGIFLoader (stream));
     return loader->image;
 }
 
-bool AnimatedGIFImageFormat::writeImageToStream (const Image& /*sourceImage*/, OutputStream& /*destStream*/)
+void AnimatedGIFImage::setFrameDuration(int frame, int ms)
 {
-    jassertfalse; // writing isn't implemented for GIFs!
-    return false;
+    frameTimes.set(frame, ms);
 }
+
+int AnimatedGIFImage::getFrameDuration(int frame)
+{
+    if(frameTimes.size() >= frame)
+        return frameTimes.getReference(frame);
+    
+    return -1;
+}
+
+bool AnimatedGIFImage::isAnimated()
+{
+    return size() > 1;
+}
+
+int AnimatedGIFImage::getNumFrames()
+{
+    return size();
+}
+
+

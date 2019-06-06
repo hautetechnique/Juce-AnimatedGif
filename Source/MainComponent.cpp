@@ -12,8 +12,7 @@
 MainComponent::MainComponent()
 {
     
-    AnimatedGIFImageFormat a;
-    File f("~/Desktop/test.gif");
+    File f("~/Desktop/test2.gif");
     
     
     AnimatedGIFImage animation;

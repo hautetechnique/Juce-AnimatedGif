@@ -32,9 +32,14 @@ public:
     int getGIFWidth();
     int getGIFHeight();
     
+    int getFrameRate();
+    void setFrameRate(int ms);
+    
+    void useDefaultFramerate();
+    
 private:
     
-    
+    int framerate{-1};
     
     int currentFrame{0};
     AnimatedGIFImage img;
